@@ -1,3 +1,4 @@
+// Git Repository Link: https://github.com/your-username/your-repo-name
 package carl.lab07_carl;
 
 import javafx.animation.FadeTransition;
@@ -7,19 +8,19 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 
 /**
  * JavaFX App
@@ -31,32 +32,29 @@ public class App extends Application {
         VBox root = new VBox();
 
         Duration segmentDuration = Duration.millis(1250);
+        Duration totalLoopDuration = Duration.millis(5000);
 
-        // PART 1:
         Pane topPane = new Pane();
         topPane.setPrefSize(600, 300);
         topPane.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 
         Polyline pathMNPQ = new Polyline(
-            100.0, 50.0,   
-            500.0, 50.0,   
-            500.0, 250.0,  
-            100.0, 250.0,  
-            100.0, 50.0    
+            100.0, 50.0,   // M
+            500.0, 50.0,   // N
+            500.0, 250.0,  // P
+            100.0, 250.0,  // Q
+            100.0, 50.0    // M
         );
         
         Circle shapeA = new Circle(15, Color.BLUE);
 
-        PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(segmentDuration);
-        pathTransition.setPath(pathMNPQ);
-        pathTransition.setNode(shapeA);
-        pathTransition.setOrientation(PathTransition.OrientationType.NONE);
+        PathTransition pathTransitionA = new PathTransition();
+        pathTransitionA.setDuration(totalLoopDuration); // Fixed variable name & duration
+        pathTransitionA.setPath(pathMNPQ);
+        pathTransitionA.setNode(shapeA);
+        pathTransitionA.setOrientation(PathTransition.OrientationType.NONE);
 
-        topPane.getChildren().add(shapeA);
-        
-        // Part 2
-        Ellipse shapeB = new Ellipse(300, 175, 40, 20);
+        Ellipse shapeB = new Ellipse(300, 150, 40, 20);
         shapeB.setFill(Color.CORAL);
         shapeB.setStroke(Color.BLACK);
 
@@ -80,7 +78,38 @@ public class App extends Application {
 
         topPane.getChildren().addAll(shapeA, shapeB);
         
-        Scene scene = new Scene(root, 600, 600);
+        HBox controlBox = new HBox(20);
+        controlBox.setAlignment(Pos.CENTER);
+        controlBox.setPrefHeight(60);
+        controlBox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;");
+
+        Button btnStart = new Button("Start");
+        Button btnReset = new Button("Reset");
+        Button btnExit = new Button("Exit");
+
+        btnStart.setOnAction(e -> {
+            pathTransitionA.play();
+            seqTransitionB.play();
+        });
+
+        btnReset.setOnAction(e -> {
+            pathTransitionA.stop();
+            seqTransitionB.stop();
+            
+            shapeB.setOpacity(1.0);
+            shapeB.setScaleX(1.0);
+            shapeB.setScaleY(1.0);
+            shapeB.setRotate(0);
+            shapeB.setTranslateY(0);
+        });
+
+        btnExit.setOnAction(e -> Platform.exit());
+
+        controlBox.getChildren().addAll(btnStart, btnReset, btnExit);
+
+        root.getChildren().addAll(topPane, controlBox);
+        
+        Scene scene = new Scene(root, 600, 380);
         stage.setTitle("JavaFX Animations A and B");
         stage.setScene(scene);
         stage.show();
@@ -89,5 +118,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }
