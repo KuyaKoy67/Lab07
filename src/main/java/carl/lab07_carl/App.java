@@ -1,4 +1,3 @@
-// Git Repository Link: https://github.com/your-username/your-repo-name
 package carl.lab07_carl;
 
 import javafx.animation.FadeTransition;
@@ -39,17 +38,17 @@ public class App extends Application {
         topPane.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 
         Polyline pathMNPQ = new Polyline(
-            100.0, 50.0,   // M
-            500.0, 50.0,   // N
-            500.0, 250.0,  // P
-            100.0, 250.0,  // Q
-            100.0, 50.0    // M
+            100.0, 50.0,
+            500.0, 50.0,
+            500.0, 250.0,
+            100.0, 250.0,
+            100.0, 50.0
         );
         
         Circle shapeA = new Circle(15, Color.BLUE);
 
         PathTransition pathTransitionA = new PathTransition();
-        pathTransitionA.setDuration(totalLoopDuration); // Fixed variable name & duration
+        pathTransitionA.setDuration(totalLoopDuration);
         pathTransitionA.setPath(pathMNPQ);
         pathTransitionA.setNode(shapeA);
         pathTransitionA.setOrientation(PathTransition.OrientationType.NONE);
@@ -88,14 +87,16 @@ public class App extends Application {
         Button btnExit = new Button("Exit");
 
         btnStart.setOnAction(e -> {
-            pathTransitionA.play();
-            seqTransitionB.play();
+            pathTransitionA.playFromStart();
+            seqTransitionB.playFromStart();
         });
 
         btnReset.setOnAction(e -> {
             pathTransitionA.stop();
             seqTransitionB.stop();
             
+            pathTransitionA.jumpTo(Duration.ZERO);
+
             shapeB.setOpacity(1.0);
             shapeB.setScaleX(1.0);
             shapeB.setScaleY(1.0);
